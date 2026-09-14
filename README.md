@@ -105,3 +105,4 @@ Toutes les décisions et écarts documentés (cadrage vs demande vs proposition 
 BVAR, Boosting/MLP, DFM/MIDAS et SVAR ne sont pas implémentés (moteurs 2 à 4 et module structurel du cadrage Ch.6.2) ; le score d'éligibilité complet à 7 critères (S1 PIB/habitant PPA, S4 ressources, S5 qualité institutionnelle WGI) n'est pas reconstituable avec les données disponibles ; les horizons de projection 6 à 10 ans (2030-2034) sont des extrapolations non testées en backtest ; la couverture empirique des intervalles de confiance n'est pas vérifiable finement avec 4 réalisations par horizon.
 # simulation_maroc_test
 # simulation_maroc_test
+# simulation_maroc_test
