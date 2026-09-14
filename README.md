@@ -106,3 +106,4 @@ BVAR, Boosting/MLP, DFM/MIDAS et SVAR ne sont pas implémentés (moteurs 2 à 4 
 # simulation_maroc_test
 # simulation_maroc_test
 # simulation_maroc_test
+# simulation_maroc_test
