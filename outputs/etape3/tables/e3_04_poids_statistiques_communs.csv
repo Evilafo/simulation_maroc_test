@@ -1,0 +1,15 @@
+portefeuille,pays,poids_statistique_commun,n_cibles_utilisees
+initial_cadrage,VNM,0.16218673462836108,7
+initial_cadrage,CRI,0.4109639925579525,7
+initial_cadrage,DNK,0.4268492728136864,7
+alternatif_8pays,VNM,0.05491983668232315,7
+alternatif_8pays,CRI,0.0,7
+alternatif_8pays,DNK,0.03294250124367665,7
+alternatif_8pays,CHL,0.44758374765611836,7
+alternatif_8pays,MYS,0.018032298000826362,7
+alternatif_8pays,PRT,0.30864741724358763,7
+alternatif_8pays,TUR,0.0,7
+alternatif_8pays,URY,0.13787419917346785,7
+optimal_eq312,CHL,0.5705755869190579,7
+optimal_eq312,PRT,0.3763821755116802,7
+optimal_eq312,VNM,0.05304223756926197,7

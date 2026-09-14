@@ -1,0 +1,20 @@
+2026-09-14 01:10:08,459 [INFO] === Debut Etape 1 - UC-S1 MEF Maroc ===
+2026-09-14 01:10:08,472 [INFO] Environnement d'execution : {"python_version": "3.10.9", "python_executable": "C:\\Users\\MR KITOHOU\\anaconda3\\python.exe", "platform": "Windows-10-10.0.26200-SP0", "pandas": "2.3.3", "numpy": "1.26.4", "scikit_learn": "1.7.2", "scipy": "1.10.0", "matplotlib": "3.7.0", "statsmodels": "0.13.5"}
+2026-09-14 01:10:08,478 [INFO] Fichier de travail charge : C:\Users\MR KITOHOU\Desktop\Work_DAVID_DG_Mohamed\Data_collection\base_MEF_1991_2024_9pays_28indicateurs.csv (shape=(306, 30), sha256=af4e19eec6159577)
+2026-09-14 01:10:08,488 [INFO] Base source chargee : C:\Users\MR KITOHOU\Desktop\Work_DAVID_DG_Mohamed\Data_collection\data\base_B_revised_wide.csv (shape=(405, 32), sha256=083587b9b54e0b92)
+2026-09-14 01:10:08,576 [INFO] Empreintes SHA256 des sources : {'work_base_mef': 'af4e19eec6159577594075b87dd92d48453a68f1a37c2464c4fb5fd8edfb97f7', 'source_base_B_revised_wide': '083587b9b54e0b92da67c4203f5d32cdfcdb440382a53a58b27cb1d8be087348'}
+2026-09-14 01:10:08,576 [INFO] --- Audit qualite des donnees ---
+2026-09-14 01:10:08,587 [INFO] Etats complets: 278 / incomplets: 28 / total: 306
+2026-09-14 01:10:08,613 [INFO] Fenetre commune complete detectee : {'fenetre_commune_complete': [2000, 2024], 'n_annees': 25, 'n_etats': 225}
+2026-09-14 01:10:08,636 [INFO] Identites lineaires exactes detectees : 3
+2026-09-14 01:10:08,636 [INFO] --- ACP1 : profils moyens par pays (1991-2024) ---
+2026-09-14 01:10:09,436 [INFO] --- ACP1 (sensibilite) : fenetre commune 2000-2024 ---
+2026-09-14 01:10:09,529 [INFO] --- ACP1 (sensibilite) : leave-one-country-out ---
+2026-09-14 01:10:09,700 [INFO] --- ACP2 : trajectoires annuelles (1991-2024, cas complets) ---
+2026-09-14 01:10:09,747 [INFO] ACP2 : 278 etats complets utilises / 28 exclus (incomplets)
+2026-09-14 01:10:12,679 [INFO] --- Typologie : K-means vs CAH, k=2,3 ---
+2026-09-14 01:10:18,677 [INFO] Recapitulatif d'execution : {"environnement": {"python_version": "3.10.9", "python_executable": "C:\\Users\\MR KITOHOU\\anaconda3\\python.exe", "platform": "Windows-10-10.0.26200-SP0", "pandas": "2.3.3", "numpy": "1.26.4", "scikit_learn": "1.7.2", "scipy": "1.10.0", "matplotlib": "3.7.0", "statsmodels": "0.13.5"}, "empreintes_sha256": {"work_base_mef": "af4e19eec6159577594075b87dd92d48453a68f1a37c2464c4fb5fd8edfb97f7", "source_base_B_revised_wide": "083587b9b54e0b92da67c4203f5d32cdfcdb440382a53a58b27cb1d8be087348"}, "fenetre_principale": [1991, 2024], "fenetre_sensibilite_commune": [2000, 2024], "fenetre_commune_complete_detectee": {"fenetre_commune_complete": [2000, 2024], "n_annees": 25, "n_etats": 225}, "n_etats_complets": 278, "n_etats_incomplets": 28, "n_pays": 9, "n_indicateurs": 28, "acp1_n_individus": 9, "acp1_n_variables": 28, "acp2_n_individus_complets": 278, "acp2_n_etats_exclus": 28}
+2026-09-14 01:10:18,677 [INFO] === Fin Etape 1 ===
+2026-09-14 01:44:49,175 [INFO] Environnement d'execution : {"python_version": "3.10.9", "python_executable": "C:\\Users\\MR KITOHOU\\anaconda3\\python.exe", "platform": "Windows-10-10.0.26200-SP0", "pandas": "2.3.3", "numpy": "1.26.4", "scikit_learn": "1.7.2", "scipy": "1.10.0", "matplotlib": "3.7.0", "statsmodels": "0.13.5"}
+2026-09-14 01:44:49,198 [INFO] Fichier de travail charge : C:\Users\MR KITOHOU\Desktop\Work_DAVID_DG_Mohamed\Data_collection\base_MEF_1991_2024_9pays_28indicateurs.csv (shape=(306, 30), sha256=af4e19eec6159577)
+2026-09-14 01:44:49,204 [INFO] Base source chargee : C:\Users\MR KITOHOU\Desktop\Work_DAVID_DG_Mohamed\Data_collection\data\base_B_revised_wide.csv (shape=(405, 32), sha256=083587b9b54e0b92)

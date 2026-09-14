@@ -1,0 +1,14 @@
+{
+  "n_donneurs_candidats": 8,
+  "portefeuille_initial": [
+    "VNM",
+    "CRI",
+    "DNK"
+  ],
+  "meilleur_portefeuille_eq312": [
+    "CHL",
+    "PRT",
+    "VNM"
+  ],
+  "objectif_meilleur_portefeuille": 0.6508299396096802
+}

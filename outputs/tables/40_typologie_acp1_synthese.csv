@@ -1,0 +1,3 @@
+espace,k,silhouette_kmeans,silhouette_hierarchical,ari_kmeans_vs_hierarchical,stabilite_ari_moyen_kmeans,effectifs_kmeans,effectifs_hierarchical
+ACP1_profils_pays_F1F2,2,0.5221612935112618,0.5221612935112618,1.0,1.0,"{0: 7, 1: 2}","{1: 2, 2: 7}"
+ACP1_profils_pays_F1F2,3,0.50279975561475,0.50279975561475,1.0,1.0,"{0: 5, 1: 2, 2: 2}","{1: 2, 2: 2, 3: 5}"

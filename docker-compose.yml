@@ -1,0 +1,28 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: API/Dockerfile
+    image: mef-maroc-ucs1-api:latest
+    container_name: mef-maroc-ucs1-api
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health')"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+  interface:
+    build:
+      context: .
+      dockerfile: interface/Dockerfile
+    image: mef-maroc-ucs1-interface:latest
+    container_name: mef-maroc-ucs1-interface
+    ports:
+      - "8080:80"
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: unless-stopped

@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MEF Maroc | Prévisions</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <div class="brand-mark" aria-hidden="true">M</div>
+      <div>
+        <p class="eyebrow">MEF MAROC · UC-S1</p>
+        <h1>Console de prévision</h1>
+      </div>
+      <div class="api-status" id="apiStatus"><span class="status-dot"></span><span>Connexion...</span></div>
+    </header>
+
+    <section class="intro">
+      <div>
+        <p class="eyebrow">MODÈLE ELASTIC NET</p>
+        <h2>Projeter un indicateur à partir de son historique.</h2>
+        <p class="lede">Construisez une origine de prévision avec les observations annuelles du Maroc, puis laissez le modèle entraîné produire son estimation.</p>
+      </div>
+      <div class="model-count"><strong id="modelCount">--</strong><span>modèles disponibles</span></div>
+    </section>
+
+    <section class="workspace">
+      <form class="panel form-panel" id="forecastForm">
+        <div class="panel-heading">
+          <div><p class="eyebrow">01 · CONFIGURATION</p><h3>Choisir une projection</h3></div>
+          <span class="step-number">01</span>
+        </div>
+
+        <label for="target">Indicateur à prévoir</label>
+        <select id="target" name="target"></select>
+        <p class="field-note" id="targetUnit"></p>
+
+        <label for="horizon">Horizon</label>
+        <div class="segmented" id="horizonGroup" role="group" aria-label="Horizon de prévision">
+          <button type="button" data-horizon="1" class="active">+1 an</button>
+          <button type="button" data-horizon="2">+2 ans</button>
+          <button type="button" data-horizon="3">+3 ans</button>
+          <button type="button" data-horizon="4">+4 ans</button>
+          <button type="button" data-horizon="5">+5 ans</button>
+        </div>
+
+        <div class="form-divider"></div>
+        <div class="panel-heading compact"><div><p class="eyebrow">02 · DONNÉES</p><h3>Historique annuel</h3></div><span class="required">6 années min.</span></div>
+        <p class="field-note">Renseignez au moins six années consécutives. Les variables nécessaires s’adaptent à l’indicateur choisi.</p>
+        <div class="history-table-wrap"><table><thead><tr><th>Année</th><th id="columnOne">Indicateur</th><th id="columnTwo">Variable 2</th><th id="columnThree">Variable 3</th></tr></thead><tbody id="historyBody"></tbody></table></div>
+        <button class="primary-button" type="submit"><span>Calculer la prévision</span><span aria-hidden="true">→</span></button>
+        <p class="error-message" id="errorMessage" role="alert"></p>
+      </form>
+
+      <aside class="panel result-panel" aria-live="polite">
+        <div class="panel-heading"><div><p class="eyebrow">03 · RÉSULTAT</p><h3>Projection calculée</h3></div><span class="result-icon">↗</span></div>
+        <div class="result-empty" id="resultEmpty"><span class="empty-line"></span><p>Votre résultat apparaîtra ici</p><small>La projection sera calculée par l’artefact Elastic Net final correspondant à votre choix.</small></div>
+        <div class="result-content" id="resultContent" hidden>
+          <p class="result-label" id="resultTarget">CROISSANCE DU PIB</p>
+          <div class="result-value"><strong id="predictionValue">--</strong><span id="predictionUnit">%</span></div>
+          <div class="result-meta"><span>Année projetée</span><strong id="targetYear">--</strong></div>
+          <div class="result-meta"><span>Origine</span><strong id="originYear">--</strong></div>
+          <div class="result-meta"><span>Modèle</span><strong>Elastic Net final</strong></div>
+          <div class="confidence-note"><span>i</span><p>Résultat statistique indicatif. Il ne constitue pas une prévision institutionnellement validée.</p></div>
+        </div>
+      </aside>
+    </section>
+    <footer><span>API locale · <span id="apiEndpoint">127.0.0.1:8000</span></span><span>Étape 2 · Portefeuille prédictif</span></footer>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>

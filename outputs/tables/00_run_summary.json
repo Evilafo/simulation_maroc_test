@@ -1,0 +1,41 @@
+{
+  "environnement": {
+    "python_version": "3.10.9",
+    "python_executable": "C:\\Users\\MR KITOHOU\\anaconda3\\python.exe",
+    "platform": "Windows-10-10.0.26200-SP0",
+    "pandas": "2.3.3",
+    "numpy": "1.26.4",
+    "scikit_learn": "1.7.2",
+    "scipy": "1.10.0",
+    "matplotlib": "3.7.0",
+    "statsmodels": "0.13.5"
+  },
+  "empreintes_sha256": {
+    "work_base_mef": "af4e19eec6159577594075b87dd92d48453a68f1a37c2464c4fb5fd8edfb97f7",
+    "source_base_B_revised_wide": "083587b9b54e0b92da67c4203f5d32cdfcdb440382a53a58b27cb1d8be087348"
+  },
+  "fenetre_principale": [
+    1991,
+    2024
+  ],
+  "fenetre_sensibilite_commune": [
+    2000,
+    2024
+  ],
+  "fenetre_commune_complete_detectee": {
+    "fenetre_commune_complete": [
+      2000,
+      2024
+    ],
+    "n_annees": 25,
+    "n_etats": 225
+  },
+  "n_etats_complets": 278,
+  "n_etats_incomplets": 28,
+  "n_pays": 9,
+  "n_indicateurs": 28,
+  "acp1_n_individus": 9,
+  "acp1_n_variables": 28,
+  "acp2_n_individus_complets": 278,
+  "acp2_n_etats_exclus": 28
+}

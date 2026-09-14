@@ -1,0 +1,1 @@
+"""Interface HTTP du projet MEF Maroc UC-S1."""

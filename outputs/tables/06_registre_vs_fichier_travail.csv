@@ -1,0 +1,44 @@
+variable,label_registre,categorie,uc_s1_target,variable_type,status_registre,presente_fichier_travail_28ind
+DETTE_PUBLIQUE,Dette brute des administrations publiques (APU),Finances publiques,True,level_slow,keep,False
+COEM,Remuneration des salaries publics,Finances publiques,False,ratio_smooth,keep,False
+CRPA,Croissance de la population active,Marche du travail,False,cyclical,derived_kept,False
+CRSP,Credit interieur au secteur prive,Finance,False,ratio_smooth,keep,False
+DEED,Depenses publiques totales d'education,Developpement humain,False,ratio_smooth,keep,False
+DEP_SANTE_PUBLIQUE,Depenses publiques domestiques de sante,Developpement humain,False,ratio_smooth,keep,False
+FBCF_PRIVEE,FBCF du secteur prive,Investissement,False,ratio_smooth,keep,False
+GINI,Indice de Gini,Social,False,survey_based,keep,False
+MARGE_BUDGETAIRE,Solde budgetaire calcule (recettes - depenses),Finances publiques,False,cyclical,derived_kept,False
+PAUVRETE_ECO,"Pauvrete a 3,00 USD/jour (PPA 2021)",Social,False,survey_based,keep,False
+SUBV,Subventions et autres transferts,Finances publiques,False,ratio_smooth,keep,False
+TCER,Taux de change effectif reel,Commerce exterieur,False,index_prices,keep,False
+TERMES_ECHANGE_NETS,Indice des termes de l'echange nets,Commerce exterieur,False,index_prices,keep,False
+TSSE,Taux brut de scolarisation secondaire,Developpement humain,False,ratio_smooth,keep,False
+TSSU,Taux brut de scolarisation tertiaire,Developpement humain,False,ratio_smooth,keep,False
+BALANCE_COURANTE,Solde du compte courant,Commerce exterieur,True,cyclical,keep,True
+CROISSANCE_PIB,Croissance du PIB reel,Macroeconomique,True,cyclical,keep,True
+FBCF,Formation brute de capital fixe (totale),Investissement,True,ratio_smooth,keep,True
+INFLATION_CPI,Inflation des prix a la consommation,Macroeconomique,True,cyclical,keep,True
+SOBG,Solde global des administrations publiques,Finances publiques,True,cyclical,keep,True
+TACH,Chomage total (estimation modelisee OIT),Marche du travail,True,ratio_smooth,keep,True
+CRDE,Croissance demographique,Demographie,False,ratio_smooth,keep,True
+DETO,Depenses publiques totales,Finances publiques,False,ratio_smooth,keep,True
+EMAG,Emploi en agriculture (OIT modelise),Structure economique,False,ratio_smooth,keep,True
+EMIN,Emploi dans l'industrie (OIT modelise),Structure economique,False,ratio_smooth,keep,True
+EMSE,Emploi dans les services (OIT modelise),Structure economique,False,ratio_smooth,keep,True
+EVNA,Esperance de vie a la naissance,Developpement humain,False,level_slow,keep,True
+EXPO,Exportations de biens et services,Commerce exterieur,False,ratio_smooth,keep,True
+EXPORT_MARCHANDISES_USD,Exportations de marchandises (USD courants),Commerce exterieur,False,monetary_flow,keep,True
+IDEE,"IDE, entrees nettes",Investissement,False,cyclical,keep,True
+IMPO,Importations de biens et services,Commerce exterieur,False,ratio_smooth,keep,True
+LFPRF,"Taux d'activite feminin, 15 ans et plus (OIT modelise)",Genre,False,ratio_smooth,keep,True
+OUVERTURE_COM,Ouverture commerciale (BM canonique),Commerce exterieur,False,ratio_smooth,keep,True
+POP_ACTIVE_TOTALE,Population active totale (effectif),Marche du travail,False,level_slow,keep,True
+RETO,Recettes des administrations publiques,Finances publiques,False,ratio_smooth,keep,True
+SOPR,Solde primaire des administrations publiques,Finances publiques,False,cyclical,keep,True
+TAAC,"Taux d'activite total, 15-64 ans",Marche du travail,False,ratio_smooth,keep,True
+TAUX_EMPLOI_15P,"Taux d'emploi, 15 ans et plus, total (OIT modelise)",Marche du travail,False,ratio_smooth,keep,True
+UNFE,Chomage feminin (OIT modelise),Genre,False,ratio_smooth,keep,True
+VAAG,"Valeur ajoutee - agriculture, foresterie, peche",Structure economique,False,ratio_smooth,keep,True
+VAIN,Valeur ajoutee - industrie (construction incluse),Structure economique,False,ratio_smooth,keep,True
+VASE,Valeur ajoutee - services,Structure economique,False,ratio_smooth,keep,True
+WSWF,Salariees parmi l'emploi feminin,Genre,False,ratio_smooth,keep,True

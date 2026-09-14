@@ -1,0 +1,10 @@
+scenario,pays,poids_politique
+tout_vietnam,VNM,1.0
+tout_vietnam,CRI,0.0
+tout_vietnam,DNK,0.0
+tout_costa_rica,VNM,0.0
+tout_costa_rica,CRI,1.0
+tout_costa_rica,DNK,0.0
+tout_danemark,VNM,0.0
+tout_danemark,CRI,0.0
+tout_danemark,DNK,1.0

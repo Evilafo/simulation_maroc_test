@@ -1,0 +1,6 @@
+test,reussi,ecart_max
+alpha=0 => X_s = X_tend_MAR,True,0.0
+alpha=1 => X_s = X_bench_comb,True,0.0
+portefeuille a un seul donneur (VNM) => benchmark = sa trajectoire,True,0.0
+poids ne sommant pas a 1 => rejet,True,0.0
+poids negatif => rejet,True,0.0

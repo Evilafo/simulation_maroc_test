@@ -1,0 +1,154 @@
+---
+# ============================================================================
+# CONFIGURATION ETAPE 3 - DATALAB MEF Maroc UC-S1
+# Benchlearning, simulation des trajectoires et livraison finale
+# ============================================================================
+# Complete configs/config.yaml et configs/config_etape2.yaml, ne les
+# remplace pas. Chaque valeur est soit tracable (cadrage Ch.3/Ch.6), soit
+# une proposition methodologique explicitement marquee comme telle.
+# Validee au demarrage par src/etape3/config_check.py (types, bornes,
+# coherence poids/sommes).
+# ============================================================================
+
+project:
+  name: "mef_maroc_ucs1_etape3"
+  step: "3/3 - benchlearning, simulation, livraison finale"
+  random_seed: 42
+
+paths:
+  outputs_dir: "outputs/etape3"
+  outputs_tables_dir: "outputs/etape3/tables"
+  outputs_figures_dir: "outputs/etape3/figures"
+  outputs_models_dir: "outputs/etape3/models"
+  docs_dir: "docs"
+  log_file: "outputs/etape3/run_log.txt"
+
+scope:
+  year_start: 1991
+  year_end: 2024              # dernière année historique (origine finale)
+  focus_country: MAR
+  donors_initial: [VNM, CRI, DNK]                       # portefeuille exploratoire initial du cadrage (Ch.3.3)
+  donors_alternative: [CHL, MYS, PRT, TUR, URY]          # ensemble alternatif du cadrage (Ch.3.3)
+  # Note explicite : les 8 candidats couvrent exactement le panel de
+  # comparateurs deja constitue aux etapes 1-2. Aucune nouvelle observation
+  # hors perimetre n'est ajoutee.
+  projection_horizon_max: 10   # 2025-2034 au maximum ; configurable
+  projection_year_start: 2025
+  projection_year_end: 2034
+  horizons_tested_backtest: [1, 2, 3, 4, 5]     # horizons effectivement evalues (protocole etape 2 reconduit)
+  horizons_extrapolation: [6, 7, 8, 9, 10]      # horizons NON evalues en biais/RMSE : extrapolation longue signalee comme telle
+
+# ----------------------------------------------------------------------------
+# Protocole temporel : reconduit tel quel depuis l'etape 2 (meme decoupage,
+# reestimation complete -- scores, poids, selection, hyperparametres -- dans
+# chaque fenetre, sur les seules informations accessibles a l'origine).
+# ----------------------------------------------------------------------------
+temporal_protocol:
+  internal_train_end: 2020
+  final_start: 2021
+  final_end: 2024
+  window_type: "expanding"
+  forecast_method: "direct"
+  reestimation_note: >
+    Les poids statistiques (Eq. 3.14) sont reestimes a CHAQUE origine du
+    backtest, exclusivement sur l'historique accessible a cette origine
+    (peu couteux : programme quadratique a 3 inconnues). Les modeles de
+    tendance (donneurs et Maroc) suivent la MEME convention de gel que le
+    modele national valide en etape 2 : caracteristiques et hyperparametres
+    figes une seule fois sur le bloc interne (target_year<=2020), puis
+    seuls les coefficients sont reajustes par origine -- reglage repete a
+    chaque origine juge non necessaire des lors que la specification est
+    deja gelee de maniere coherente avec l'etape 2, et couteux en temps de
+    calcul (9 pays x 7 cibles x 5 horizons x ~30 origines). Aucun reglage
+    sur le bloc final 2021-2024 n'alimente les choix geles, dans les deux
+    cas.
+
+targets:
+  # Reprend exactement les 7 cibles et familles de l'etape 2.
+  CROISSANCE_PIB: {family: variation}
+  INFLATION_CPI: {family: variation}
+  SOBG: {family: niveau_ratio}
+  DETTE_PUBLIQUE: {family: niveau_ratio}
+  BALANCE_COURANTE: {family: niveau_ratio}
+  TACH: {family: variation}
+  FBCF: {family: niveau_ratio}
+
+# ----------------------------------------------------------------------------
+# Grille d'eligibilite des donneurs (cadrage Ch.3.2). Les criteres S1
+# (PIB/hab. PPA), S4 (contraintes en ressources) et S5 (qualite
+# institutionnelle WGI) NE SONT PAS calculables avec les 30 indicateurs de
+# ce projet (deja documente en etape 1/2) : le score complet S_c a 7
+# criteres n'est donc pas reconstituable. Le score S_POC (exploratoire) ne
+# doit jamais etre confondu avec S_c ni comparer au seuil provisoire 0.55
+# du cadrage (Eq. 3.11), qui s'applique au score complet.
+# ----------------------------------------------------------------------------
+donor_eligibility:
+  score_poc_components: [S2_structure, S3_ouverture, S6_completude, S7_partiel]
+  s7_partiel_note: "Approxime par la croissance moyenne du PIB et de la FBCF sur la fenetre -- proxy partiel de 's7 : pertinence de la trajectoire de transformation', pas les 5 dimensions completes (industrialisation, capital humain, diversification, emploi, inclusion) du cadrage."
+  poids_composants_renormalises: true   # poids de S2,S3,S6,S7 renormalises a somme 1 (les 3 composantes manquantes S1,S4,S5 sont retirees, pas mises a zero silencieusement)
+  seuil_0_55_applicable: false          # explicitement desactive : ne s'applique qu'au score complet S_c, jamais a S_POC
+  portfolio_size_m: 3                   # taille de portefeuille comparee au portefeuille initial (VNM,CRI,DNK)
+  diversity_lambda: 0.5                 # parametre lambda de l'Eq. 3.12, valeur de depart -- sensibilite testee
+
+# ----------------------------------------------------------------------------
+# Poids de combinaison (Eq. 3.14). Distinction stricte statistique/politique
+# imposee par le cadrage (garde-fou Ch.3.5.1) : les poids politiques ne
+# servent JAMAIS a la prevision centrale.
+# ----------------------------------------------------------------------------
+weights:
+  statistical:
+    method: "controle_synthetique_regularise"   # programme quadratique sous contraintes (omega>=0, somme=1), regularisation L2 legere pour la stabilite (8 donneurs, historique court)
+    l2_regularization: 0.01
+    common_portfolio: true    # un seul vecteur omega pour les 7 cibles (objectif poolee, cibles standardisees)
+    per_target_variant: true  # variante : un omega par cible, verifiee pour coherence (correlation des vecteurs de poids entre cibles)
+  political_scenarios:
+    # Illustratifs uniquement, presentes TOUJOURS appariees a la reference
+    # statistique -- jamais utilises seuls comme prevision centrale.
+    - {name: "tout_vietnam", weights: {VNM: 1.0}}
+    - {name: "tout_costa_rica", weights: {CRI: 1.0}}
+    - {name: "tout_danemark", weights: {DNK: 1.0}}
+
+scenarios:
+  # alpha_s de l'Eq. 3.15 : hypotheses configurables, sans validation
+  # institutionnelle presumee (consigne explicite).
+  alphas: [0.0, 0.25, 0.5, 0.75, 1.0]
+  alpha_labels:
+    "0.0": "tendance_nationale_seule"
+    "0.25": "convergence_faible"
+    "0.5": "convergence_moderee"
+    "0.75": "convergence_forte"
+    "1.0": "benchmark_pur"
+  dynamic_adjustment_enabled: false   # 3e niveau (lissage/inertie) : hors perimetre du cadrage, DESACTIVE par defaut (cf. Ch.3.5)
+
+# ----------------------------------------------------------------------------
+# Modeles de tendance (Maroc + donneurs) : reutilisent l'architecture directe
+# par horizon de l'etape 2 (memes plafonds de retards/caracteristiques).
+# ----------------------------------------------------------------------------
+trend_models:
+  reuse_etape2_frozen_specs_for_horizons_1_5: true
+  extrapolation_horizons_6_10:
+    method: "meme_architecture_elasticnet_horizon_direct"
+    note: "Reglage independant (walk-forward interne) pour chaque horizon 6-10, jamais evalue en RMSE/biais faute de realisations -- extrapolation signalee comme telle dans toutes les sorties."
+
+# ----------------------------------------------------------------------------
+# Monte Carlo (cadrage Ch.6.4)
+# ----------------------------------------------------------------------------
+monte_carlo:
+  n_draws_full: 10000
+  n_draws_fast: 500
+  random_seed: 42
+  shock_distributions: ["gaussienne", "bootstrap_empirique"]
+  default_distribution: "gaussienne"
+  covariance_regularization: "shrinkage_diagonale"   # mélange convexe covariance empirique / diagonale (Ledoit-Wolf simplifie), justifie par le faible effectif (T~30, 7 cibles)
+  shrinkage_intensity: 0.3
+  convergence_check_draws: [1000, 5000, 10000, 20000]
+  coverage_levels: [0.68, 0.95]
+
+evaluation:
+  # Reprend les seuils de l'etape 2 (cadrage Ch.6.5.3)
+  gain_threshold_variation_pct: 10
+  min_forecasts_for_conclusion: 4
+  dm_test_min_forecasts: 8
+
+logging:
+  level: "INFO"

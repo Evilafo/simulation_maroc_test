@@ -1,0 +1,104 @@
+---
+# ============================================================================
+# CONFIGURATION ETAPE 1 - DATALAB MEF Maroc UC-S1
+# Audit, preparation, deux ACP et typologie des pays
+# ============================================================================
+# Toutes les valeurs ci-dessous sont soit tracables a une source documentee
+# (registre, config pipeline, cadrage), soit explicitement marquees comme
+# "proposition operationnelle" de cette etape (non attribuee au cadrage).
+# Voir docs/MATRICE_CONFORMITE.md pour la justification de chaque choix.
+# ============================================================================
+
+project:
+  name: "mef_maroc_ucs1_etape1"
+  step: "1/3 - audit, preparation, deux ACP, typologie des pays"
+  random_seed: 42
+
+paths:
+  # Sources externes (hors depot git, jamais copiees ni modifiees sur place)
+  source_base_B_revised_wide: "C:/Users/MR KITOHOU/Desktop/Work_DAVID_DG_Mohamed/Data_collection/data/base_B_revised_wide.csv"
+  work_base_mef: "C:/Users/MR KITOHOU/Desktop/Work_DAVID_DG_Mohamed/Data_collection/base_MEF_1991_2024_9pays_28indicateurs.csv"
+  variable_registry: "C:/Users/MR KITOHOU/Desktop/Work_DAVID_DG_Mohamed/Data_collection/benchlearning_uc_s1_v1.2.5_complete/config/variable_registry.yaml"
+  pipeline_config: "C:/Users/MR KITOHOU/Desktop/Work_DAVID_DG_Mohamed/Data_collection/benchlearning_uc_s1_v1.2.5_complete/config/config.yaml"
+  journal_imputations: "C:/Users/MR KITOHOU/Desktop/Work_DAVID_DG_Mohamed/Data_collection/benchlearning_uc_s1_v1.2.5_complete/outputs/pipeline/20260906T111317Z_6b9059e8/gold_analytical/journal_imputations_20260906T112701Z.csv"
+  journal_api_calls: "C:/Users/MR KITOHOU/Desktop/Work_DAVID_DG_Mohamed/Data_collection/benchlearning_uc_s1_v1.2.5_complete/outputs/pipeline/20260906T111317Z_6b9059e8/gold_analytical/journal_appels_api_20260906T112701Z.csv"
+  cadrage_pdf: "C:/Users/MR KITOHOU/Desktop/Work_DAVID_DG_Mohamed/rapport_cadrage_UC-S1_final.pdf"
+  # NB : le fichier demande "rapport_cadrage_UC-S1_final(2).pdf" n'a pas ete
+  # localise sous ce nom exact sur la machine. Le fichier ci-dessus (meme
+  # racine de nom, sans suffixe "(2)") est utilise comme meilleure
+  # correspondance disponible. A confirmer avec l'utilisateur si un autre
+  # fichier etait vise (voir docs/MATRICE_CONFORMITE.md, ligne correspondante).
+  modelisation_html: "C:/Users/MR KITOHOU/Downloads/Modelisation_Maroc (1).html"
+  notebook_legacy: "C:/Users/MR KITOHOU/Desktop/Work_DAVID_DG_Mohamed/fichiers_intermediaires/Modelisation_Maroc_v2.ipynb"
+  # Sortie du projet (dans le depot git)
+  outputs_dir: "outputs"
+  outputs_tables_dir: "outputs/tables"
+  outputs_figures_dir: "outputs/figures"
+  docs_dir: "docs"
+
+scope:
+  # Fenetre principale de l'etape 1, telle que fournie dans la demande.
+  # Ne correspond ni a window_full [1980,2024] ni a window_core [2000,2024]
+  # du registre canonique (config.yaml pipeline) : ecart documente, pas
+  # justifie par une source retrouvee. Voir MATRICE_CONFORMITE.md.
+  year_start: 1991
+  year_end: 2024
+  countries:
+    - MAR   # Maroc - pays d'etude
+    - CHL   # Chili - benchmark alternatif
+    - CRI   # Costa Rica - benchmark principal
+    - DNK   # Danemark - benchmark principal
+    - MYS   # Malaisie - benchmark alternatif
+    - PRT   # Portugal - benchmark alternatif
+    - TUR   # Turquie - benchmark alternatif
+    - URY   # Uruguay - benchmark alternatif
+    - VNM   # Viet Nam - benchmark principal
+  focus_country: MAR
+  # Fenetre commune de sensibilite : la plus recente ou TOUTES les
+  # combinaisons pays x variable du fichier de travail sont observees sans
+  # aucune lacune (verifie empiriquement en Phase audit, coincide avec le
+  # window_core du registre canonique [2000,2024] - non recherche a dessein,
+  # simple convergence constatee).
+  sensitivity_common_window: [2000, 2024]
+  excluded_from_work_base:
+    - DETTE_PUBLIQUE   # cible officielle UC-S1 au sens du registre, mais absente du fichier de travail 28 indicateurs
+    - TCER             # explicative potentielle de BALANCE_COURANTE au sens du cadrage Ch.5.2.5, absente du fichier de travail
+
+targets:
+  # Correspondance cadrage (Ch.5) -> colonne reelle du fichier de travail.
+  # "disponible" = present avec les valeurs attendues dans base_MEF_1991_2024_9pays_28indicateurs.csv
+  PIBR: {label: "Croissance du PIB reel", column: "CROISSANCE_PIB", disponible: true}
+  INFL: {label: "Inflation totale", column: "INFLATION_CPI", disponible: true, note: "inflation sous-jacente non disponible dans cette base"}
+  SOBG: {label: "Solde budgetaire global", column: "SOBG", complement: "SOPR", disponible: true}
+  DETP: {label: "Dette publique / PIB (perimetre APU, IMF GGXWDG_NGDP)", column: "DETTE_PUBLIQUE", disponible_source: true, disponible_work_base: false}
+  BCUR: {label: "Compte courant / PIB", column: "BALANCE_COURANTE", disponible: true}
+  CHOM: {label: "Taux de chomage", column: "TACH", disponible: true, note: "elasticite emploi-croissance retiree du registre (formule invalide, audit_ref P0-04) - non reconstruite a ce stade"}
+  FBCF: {label: "FBCF / PIB", column: "FBCF", disponible: true}
+
+missing_data:
+  # Politique descriptive pour cette etape (pas de modele predictif ici).
+  # Aucune imputation supplementaire n'est appliquee : les valeurs manquantes
+  # du fichier de travail sont concentrees en debut de fenetre pour certains
+  # pays candidats (TUR, URY, VNM sur variables budgetaires ; VNM sur
+  # INFLATION_CPI/FBCF ; PRT sur la structure de valeur ajoutee). Voir audit.
+  strategy: "aucune imputation ; exclusion en cas complet pour l'ACP2, moyennes sur annees disponibles pour l'ACP1"
+  min_years_required_for_country_mean: 5  # seuil arbitraire de robustesse minimale pour une moyenne pays-variable
+
+pca:
+  standardize: true  # ACP sur matrice de correlations (obligatoire : la PCA de sklearn ne standardise pas)
+  profiles:
+    # ACP1 : une ligne par pays, moyenne 1991-2024 (ou sous-fenetre disponible)
+    n_components_max: 8   # rang centre maximal avec 9 pays (9-1)
+  trajectories:
+    # ACP2 : une ACP globale sur les observations pays-annee, echelle commune
+    use_complete_cases_only: true  # 278/306 etats attendus
+
+clustering:
+  k_values: [2, 3]
+  methods: ["kmeans", "hierarchical"]
+  random_state: 42
+  n_init: 50
+
+logging:
+  level: "INFO"
+  log_file: "outputs/run_log.txt"

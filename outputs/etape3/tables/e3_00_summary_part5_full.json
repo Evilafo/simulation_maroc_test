@@ -1,0 +1,11 @@
+{
+  "mode": "complet",
+  "n_draws": 10000,
+  "n_obs_covariance": 18,
+  "ecart_relatif_convergence": 0.11437958058037886,
+  "n_lignes_bandes": 700,
+  "distributions_testees": [
+    "gaussienne",
+    "bootstrap_empirique"
+  ]
+}

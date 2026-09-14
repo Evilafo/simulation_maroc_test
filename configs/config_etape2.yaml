@@ -1,0 +1,192 @@
+---
+# ============================================================================
+# CONFIGURATION ETAPE 2 - DATALAB MEF Maroc UC-S1
+# Caracteristiques, selection, VAR/VECM et validation
+# ============================================================================
+# Complete configs/config.yaml (etape 1), ne le remplace pas. Toute valeur
+# est soit tracable (cadrage Ch.5/6, registre), soit une proposition
+# methodologique explicitement marquee comme telle.
+# ============================================================================
+
+project:
+  name: "mef_maroc_ucs1_etape2"
+  step: "2/3 - caracteristiques, modeles et validation"
+  random_seed: 42
+
+paths:
+  # Reutilise les chemins sources de l'etape 1 (configs/config.yaml). Le
+  # fichier de travail 28 indicateurs de l'etape 1 est ETENDU ici a 30
+  # indicateurs (reintegration DETTE_PUBLIQUE + TCER depuis la base source,
+  # cf. decision ci-dessous), plutot que remplace.
+  outputs_dir: "outputs/etape2"
+  outputs_tables_dir: "outputs/etape2/tables"
+  outputs_figures_dir: "outputs/etape2/figures"
+  outputs_models_dir: "outputs/etape2/models"
+  docs_dir: "docs"
+  log_file: "outputs/etape2/run_log.txt"
+
+scope:
+  year_start: 1991
+  year_end: 2024
+  countries: [MAR, CHL, CRI, DNK, MYS, PRT, TUR, URY, VNM]
+  focus_country: MAR
+
+# ----------------------------------------------------------------------------
+# Decision explicite (met a jour le point ouvert #1 de SUIVI_MODELISATION.md
+# issu de l'etape 1) : DETTE_PUBLIQUE et TCER sont reintegres dans le jeu de
+# travail de l'etape 2, sources directement depuis base_B_revised_wide.csv
+# (verifie : les 28 colonnes partagees avec le fichier de travail etape 1
+# sont IDENTIQUES a 1e-6 pres sur la fenetre 1991-2024/9 pays -- pas de
+# divergence de source). Motif : DETP est une cible demandee explicitement
+# pour cette etape et une cible officielle du registre canonique (uc_s1_target:
+# true) ; TCER est une explicative documentee de BALANCE_COURANTE au cadrage
+# Ch.5.2.5. Le Maroc a une couverture COMPLETE (0 manquant/34) sur les deux
+# variables : aucun blocage de disponibilite pour le pays d'etude.
+# ----------------------------------------------------------------------------
+reintegrated_variables:
+  DETTE_PUBLIQUE:
+    motif: "Cible demandee explicitement (DETP) + uc_s1_target du registre + 0 manquant pour MAR sur 1991-2024"
+    missingness_panel: "CRI 1991-1995, URY 1995-1998, VNM 1991-1999, TUR 1999 (1 an) -- MAR complet"
+  TCER:
+    motif: "Explicative documentee de BALANCE_COURANTE (cadrage Ch.5.2.5) + 0 manquant pour MAR sur 1991-2024"
+    missingness_panel: "TUR et VNM : 100% manquant (34/34) sur toute la fenetre -- indisponibilite totale pour ces 2 pays, pas juste debut de serie"
+
+targets:
+  # family pilote le choix de metrique (cadrage Ch.6.5.3) :
+  #   "variation" -> RMSE/MAE + seuil de gain minimal 10% vs baseline
+  #   "niveau_ratio" -> RMSE relative + biais moyen, controle de derive
+  CROISSANCE_PIB: {code_cadrage: PIBR, family: variation, unit: "% annuel"}
+  INFLATION_CPI:  {code_cadrage: INFL, family: variation, unit: "% annuel"}
+  SOBG:           {code_cadrage: SOBG, family: niveau_ratio, unit: "% du PIB"}
+  DETTE_PUBLIQUE: {code_cadrage: DETP, family: niveau_ratio, unit: "% du PIB"}
+  BALANCE_COURANTE: {code_cadrage: BCUR, family: niveau_ratio, unit: "% du PIB"}
+  TACH:           {code_cadrage: CHOM, family: variation, unit: "% population active"}
+  FBCF:           {code_cadrage: FBCF, family: niveau_ratio, unit: "% du PIB"}
+
+# Cible du cadrage explicitement non modelisable a ce stade (a conserver
+# avec motif, pas a inventer) :
+targets_indisponibles:
+  ELASTICITE_EMPLOI_CROISSANCE:
+    code_cadrage: "CHOM (volet elasticite)"
+    motif: "Variable retiree du registre canonique v1.1 (audit_ref P0-04) : formule invalide (utilisait un taux d'emploi au lieu d'un effectif). Non reconstruite : necessiterait POP_ACTIVE_TOTALE x TAUX_EMPLOI_15P recalcule et une revue methodologique hors perimetre de cette etape."
+  INFLATION_SOUS_JACENTE:
+    code_cadrage: "INFL (volet sous-jacent)"
+    motif: "Aucune colonne d'inflation sous-jacente dans la base source ni le fichier de travail."
+
+# ----------------------------------------------------------------------------
+# Protocole temporel (cadrage Ch.6.5.1 + proposition explicite de la demande)
+# ----------------------------------------------------------------------------
+temporal_protocol:
+  internal_train_end: 2020        # developpement/validation interne : origines dont la cible tombe <= 2020
+  final_start: 2021
+  final_end: 2024                 # evaluation finale : origines dont la cible tombe dans [2021,2024]
+  horizons: [1, 2, 3, 4, 5]
+  min_train_years: 10             # >= plancher cadrage (8 ans annuel) ; marge pour au moins 1-2 retards + estimation
+  window_type: "expanding"        # fenetre expansive par defaut (cf. cadrage 6.5.1 "roulantes ou expansives selon la longueur")
+  rolling_window_length: 15       # utilise uniquement pour la variante de sensibilite "rolling"
+  forecast_method: "direct"       # prevision directe par horizon (un jeu d'entrainement (X_o -> y_{o+h}) par h), pas iteree
+  embargo_note: >
+    Base source sans millesimes reels (constat deja documente en etape 1) :
+    le backtest est qualifie de retrospectif sur donnees revisees, pas de
+    pseudo-temps-reel. Hypothese de disponibilite retenue : l'information
+    d'annee O (toutes colonnes) est supposee disponible pour produire une
+    prevision a l'origine O -- aucun delai de publication infra-annuel
+    modelise (donnees annuelles uniquement dans ce fichier de travail).
+
+# ----------------------------------------------------------------------------
+# Caracteristiques : plafonds et catalogue (cadrage Ch.5, mecanismes par
+# cible -> colonne disponible dans le jeu de travail 30 indicateurs)
+# ----------------------------------------------------------------------------
+features:
+  max_lags: 3
+  max_features_per_spec: 6
+  moving_stat_windows: [3, 5]
+  # Variables neutralisees pour TOUTE cible (identites exactes ou quasi,
+  # cf. outputs/tables/07_identites_lineaires_exactes.csv de l'etape 1) :
+  globally_excluded_as_predictors:
+    - MARGE_BUDGETAIRE   # n'existe pas dans ce fichier mais blocage documente si reintroduit
+  # Regles specifiques par cible : predicteurs interdits car composants
+  # algebriques exacts ou quasi-exacts de la cible elle-meme.
+  target_specific_exclusions:
+    SOBG: [RETO, DETO, SOPR]          # SOBG = RETO - DETO (identite exacte) ; SOPR quasi-colineaire (r=0.75 sur ce fichier)
+    OUVERTURE_COM_DERIVED: [EXPO, IMPO]  # si OUVERTURE_COM etait une cible (non utilise ici, documente par completude)
+
+target_mechanisms:
+  # Colonnes du fichier de travail 30 indicateurs mobilisables comme proxys
+  # des mecanismes du cadrage Ch.5, avec les mecanismes NON disponibles
+  # explicitement signales (pas d'invention de proxy hasardeux).
+  CROISSANCE_PIB:
+    disponibles: [FBCF, IDEE, TCER, CROISSANCE_PIB]  # investissement, IDE, environnement exterieur, persistance
+    non_disponibles: ["credit au secteur prive (CRSP absent du fichier de travail)", "capital humain (TSSE/TSSU absents)", "croissance zone euro (absente)"]
+  INFLATION_CPI:
+    disponibles: [TCER, CROISSANCE_PIB, INFLATION_CPI]  # inflation importee (proxy TCER), pression de demande (proxy croissance), persistance
+    non_disponibles: ["output gap explicite (non calcule)", "M3 (absente)", "prix du petrole (absent)", "salaires (absents)"]
+  SOBG:
+    disponibles: [CROISSANCE_PIB, DETTE_PUBLIQUE, SOBG]  # effet cycle sur les finances publiques, charge de la dette, persistance
+    non_disponibles: ["RETO/DETO/SOPR exclus : composants algebriques exacts ou quasi-exacts de SOBG (fuite garantie)"]
+  DETTE_PUBLIQUE:
+    disponibles: [SOPR, CROISSANCE_PIB, TCER, DETTE_PUBLIQUE]  # solde primaire, effet taux-croissance (proxy croissance), risque de change, persistance
+    non_disponibles: ["taux d'interet effectif de la dette (absent)", "passifs eventuels (absents)"]
+  BALANCE_COURANTE:
+    disponibles: [TCER, IDEE, BALANCE_COURANTE]  # competitivite, IDE/financement exterieur, persistance
+    non_disponibles: ["termes de l'echange nets (retires du fichier de travail)", "croissance des partenaires commerciaux (absente)", "transferts MRE/tourisme (absents)"]
+  TACH:
+    disponibles: [CROISSANCE_PIB, TAAC, POP_ACTIVE_TOTALE, EMAG, EMIN, TACH]  # loi d'Okun, offre de travail, structure sectorielle (2 des 3 parts, EMSE omise pour eviter la colinearite compositionnelle exacte)
+    non_disponibles: ["salaire minimum reel (absent)", "depenses de politiques actives de l'emploi (absentes)", "capital humain (absent)"]
+  FBCF:
+    disponibles: [IDEE, CROISSANCE_PIB, FBCF]  # investissements complementaires (IDE), anticipations de demande (proxy croissance), persistance
+    non_disponibles: ["credit au secteur prive (CRSP absent)", "profits des entreprises (absents)", "indice d'incertitude (absent)"]
+
+selection:
+  # Niveau 1 : plausibilite/disponibilite -> target_mechanisms ci-dessus.
+  # Niveau 2 : filtrage des redondances (|corr| > seuil sur l'apprentissage).
+  redundancy_corr_threshold: 0.90
+  # Niveau 3 : selection supervisee parcimonieuse, reglee dans les fenetres
+  # internes uniquement (jamais sur le bloc final 2021-2024).
+  elasticnet_alphas: [0.01, 0.03, 0.1, 0.3, 1.0, 3.0]
+  elasticnet_l1_ratios: [0.1, 0.3, 0.5, 0.7, 0.9]
+  internal_cv_folds: "walk_forward"  # pas de K-fold aleatoire (violerait la chronologie)
+
+# ----------------------------------------------------------------------------
+# Systemes VAR/VECM candidats : petits systemes economiquement motives
+# (jamais les 28-30 variables ensemble). Selection justifiee ci-dessous ;
+# admissibilite reelle decidee par les diagnostics (ADF/KPSS/Johansen), pas
+# imposee ici.
+# ----------------------------------------------------------------------------
+var_candidate_systems:
+  - name: "dette_solde"
+    variables: [DETTE_PUBLIQUE, SOBG]
+    justification: "Identite comptable dynamique de la dette (cadrage Ch.5.2.4) ; deja teste en cointegration a l'etape audit anterieur (p=0.061, proche du seuil, non confirme)"
+  - name: "solde_compte_courant"
+    variables: [SOBG, BALANCE_COURANTE]
+    justification: "Doubles deficits (jumeaux), mecanisme standard macro ouverte"
+  - name: "croissance_investissement"
+    variables: [CROISSANCE_PIB, FBCF]
+    justification: "Accelerateur d'investissement (cadrage Ch.5.2.7)"
+  - name: "compte_courant_change"
+    variables: [BALANCE_COURANTE, TCER]
+    justification: "Competitivite-prix et demande exterieure (cadrage Ch.5.2.5)"
+max_lags_var_search: 2  # "commence avec peu de variables et un/deux retards candidats"
+
+# ----------------------------------------------------------------------------
+# Portefeuille de modeles (cadrage Ch.6.5.2 : baselines obligatoires +
+# familles candidates)
+# ----------------------------------------------------------------------------
+models:
+  baselines: [random_walk, random_walk_drift, ar_p]
+  candidates: [elasticnet, small_var_vecm, panel_pooled]
+  ar_p_max: 3
+  panel:
+    method: "elasticnet_pooled"
+    include_country_fixed_effects_when_country_in_train: true
+    leave_one_country_out: true
+
+evaluation:
+  gain_threshold_variation_pct: 10   # cadrage Ch.6.5.3
+  coverage_levels: [0.68, 0.95]
+  coverage_tolerance_pts: 5          # cadrage Ch.6.5.3 : +/-5 points
+  dm_test_min_forecasts: 8           # taille minimale jugee suffisante pour tenter un DM/GW ; sinon "non concluant"
+  min_forecasts_for_conclusion: 4    # sous ce seuil, statut automatique "non concluant"
+
+logging:
+  level: "INFO"

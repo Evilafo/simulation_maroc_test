@@ -1,0 +1,8 @@
+code_cadrage,cible_cadrage,colonne_attendue,presente_fichier_travail,presente_registre,uc_s1_target_registre,label_registre,complement_documente,note
+PIBR,Croissance du PIB reel,CROISSANCE_PIB,True,True,True,Croissance du PIB reel,,
+INFL,Inflation totale,INFLATION_CPI,True,True,True,Inflation des prix a la consommation,,inflation sous-jacente non disponible dans cette base
+SOBG,Solde budgetaire global,SOBG,True,True,True,Solde global des administrations publiques,SOPR,
+DETP,"Dette publique / PIB (perimetre APU, IMF GGXWDG_NGDP)",DETTE_PUBLIQUE,False,True,True,Dette brute des administrations publiques (APU),,
+BCUR,Compte courant / PIB,BALANCE_COURANTE,True,True,True,Solde du compte courant,,
+CHOM,Taux de chomage,TACH,True,True,True,Chomage total (estimation modelisee OIT),,"elasticite emploi-croissance retiree du registre (formule invalide, audit_ref P0-04) - non reconstruite a ce stade"
+FBCF,FBCF / PIB,FBCF,True,True,True,Formation brute de capital fixe (totale),,

@@ -1,0 +1,72 @@
+2026-09-14 01:42:49,424 [INFO] === Etape 2, partie 1 : donnees, stationnarite, VAR/VECM ===
+2026-09-14 01:42:49,430 [INFO] Base source chargee : C:\Users\MR KITOHOU\Desktop\Work_DAVID_DG_Mohamed\Data_collection\data\base_B_revised_wide.csv (shape=(405, 32), sha256=083587b9b54e0b92)
+2026-09-14 01:42:49,431 [INFO] Jeu de travail etendu construit : shape=(306, 32) (28 indicateurs etape 1 + DETTE_PUBLIQUE + TCER)
+2026-09-14 01:42:49,435 [INFO] Fichier de travail charge : C:\Users\MR KITOHOU\Desktop\Work_DAVID_DG_Mohamed\Data_collection\base_MEF_1991_2024_9pays_28indicateurs.csv (shape=(306, 30), sha256=af4e19eec6159577)
+2026-09-14 01:42:49,449 [INFO] Verification jeu etendu vs fichier de travail etape 1 : OK (28 colonnes comparees)
+2026-09-14 01:42:49,524 [INFO] Stationnarite Maroc : 
+             variable ordre_integration                                                                                        confiance
+0    BALANCE_COURANTE       indetermine  contradictoire (ADF non-stationnaire, KPSS stationnaire au niveau -- possible faible puissance)
+1      CROISSANCE_PIB              I(0)                                                                                       concordant
+2                DETO              I(1)                                                                                       concordant
+3      DETTE_PUBLIQUE       indetermine  contradictoire (ADF non-stationnaire, KPSS stationnaire au niveau -- possible faible puissance)
+4                EMAG       indetermine                                                     schema non standard, a examiner manuellement
+5                EMIN              I(1)                                                                                       concordant
+6                FBCF              I(1)                                                                                       concordant
+7                IDEE       indetermine  contradictoire (ADF non-stationnaire, KPSS stationnaire au niveau -- possible faible puissance)
+8       INFLATION_CPI              I(0)                                                                                       concordant
+9   POP_ACTIVE_TOTALE       indetermine                               contradictoire (ADF stationnaire, KPSS non-stationnaire au niveau)
+10               RETO              I(1)                                                                                       concordant
+11               SOBG       indetermine                                                     schema non standard, a examiner manuellement
+12               SOPR       indetermine                                                     schema non standard, a examiner manuellement
+13               TAAC              I(1)                                                                                       concordant
+14               TACH              I(1)                                                                                       concordant
+15               TCER       indetermine  contradictoire (ADF non-stationnaire, KPSS stationnaire au niveau -- possible faible puissance)
+2026-09-14 01:42:49,525 [INFO] Systeme dette_solde : decision=reexamen (rejete en amont (dof insuffisant ou reexamen requis) : voir motif_decision)
+2026-09-14 01:42:49,525 [INFO] Systeme solde_compte_courant : decision=reexamen (rejete en amont (dof insuffisant ou reexamen requis) : voir motif_decision)
+2026-09-14 01:42:49,525 [INFO] Systeme croissance_investissement : decision=reexamen (rejete en amont (dof insuffisant ou reexamen requis) : voir motif_decision)
+2026-09-14 01:42:49,526 [INFO] Systeme compte_courant_change : decision=reexamen (rejete en amont (dof insuffisant ou reexamen requis) : voir motif_decision)
+2026-09-14 01:42:49,529 [INFO] Resume partie 1 : {'n_variables_stationnarite_testees': 16, 'n_systemes_var_candidats': 4, 'n_systemes_estimes': 0}
+2026-09-14 01:42:50,808 [INFO] === Etape 2, partie 2 : caracteristiques, modeles, evaluation ===
+2026-09-14 01:42:50,815 [INFO] Base source chargee : C:\Users\MR KITOHOU\Desktop\Work_DAVID_DG_Mohamed\Data_collection\data\base_B_revised_wide.csv (shape=(405, 32), sha256=083587b9b54e0b92)
+2026-09-14 01:42:50,817 [INFO] Jeu de travail etendu construit : shape=(306, 32) (28 indicateurs etape 1 + DETTE_PUBLIQUE + TCER)
+2026-09-14 01:42:51,168 [INFO] Caracteristiques construites pour 9 pays (colonnes de base : ['BALANCE_COURANTE', 'CROISSANCE_PIB', 'DETTE_PUBLIQUE', 'EMAG', 'EMIN', 'FBCF', 'IDEE', 'INFLATION_CPI', 'POP_ACTIVE_TOTALE', 'SOBG', 'SOPR', 'TAAC', 'TACH', 'TCER'])
+2026-09-14 01:42:51,168 [INFO] --- Cible CROISSANCE_PIB, horizon 1 ---
+2026-09-14 01:42:53,525 [INFO] --- Cible CROISSANCE_PIB, horizon 2 ---
+2026-09-14 01:42:55,790 [INFO] --- Cible CROISSANCE_PIB, horizon 3 ---
+2026-09-14 01:42:58,064 [INFO] --- Cible CROISSANCE_PIB, horizon 4 ---
+2026-09-14 01:43:00,252 [INFO] --- Cible CROISSANCE_PIB, horizon 5 ---
+2026-09-14 01:43:02,545 [INFO] --- Cible INFLATION_CPI, horizon 1 ---
+2026-09-14 01:43:04,842 [INFO] --- Cible INFLATION_CPI, horizon 2 ---
+2026-09-14 01:43:07,061 [INFO] --- Cible INFLATION_CPI, horizon 3 ---
+2026-09-14 01:43:09,584 [INFO] --- Cible INFLATION_CPI, horizon 4 ---
+2026-09-14 01:43:11,948 [INFO] --- Cible INFLATION_CPI, horizon 5 ---
+2026-09-14 01:43:14,435 [INFO] --- Cible SOBG, horizon 1 ---
+2026-09-14 01:43:17,353 [INFO] --- Cible SOBG, horizon 2 ---
+2026-09-14 01:43:20,733 [INFO] --- Cible SOBG, horizon 3 ---
+2026-09-14 01:43:23,350 [INFO] --- Cible SOBG, horizon 4 ---
+2026-09-14 01:43:25,708 [INFO] --- Cible SOBG, horizon 5 ---
+2026-09-14 01:43:27,970 [INFO] --- Cible DETTE_PUBLIQUE, horizon 1 ---
+2026-09-14 01:43:30,591 [INFO] --- Cible DETTE_PUBLIQUE, horizon 2 ---
+2026-09-14 01:43:33,568 [INFO] --- Cible DETTE_PUBLIQUE, horizon 3 ---
+2026-09-14 01:43:36,346 [INFO] --- Cible DETTE_PUBLIQUE, horizon 4 ---
+2026-09-14 01:43:38,795 [INFO] --- Cible DETTE_PUBLIQUE, horizon 5 ---
+2026-09-14 01:43:41,107 [INFO] --- Cible BALANCE_COURANTE, horizon 1 ---
+2026-09-14 01:43:43,683 [INFO] --- Cible BALANCE_COURANTE, horizon 2 ---
+2026-09-14 01:43:46,075 [INFO] --- Cible BALANCE_COURANTE, horizon 3 ---
+2026-09-14 01:43:48,630 [INFO] --- Cible BALANCE_COURANTE, horizon 4 ---
+2026-09-14 01:43:51,535 [INFO] --- Cible BALANCE_COURANTE, horizon 5 ---
+2026-09-14 01:43:53,809 [INFO] --- Cible TACH, horizon 1 ---
+2026-09-14 01:43:56,455 [INFO] --- Cible TACH, horizon 2 ---
+2026-09-14 01:43:59,152 [INFO] --- Cible TACH, horizon 3 ---
+2026-09-14 01:44:01,674 [INFO] --- Cible TACH, horizon 4 ---
+2026-09-14 01:44:04,481 [INFO] --- Cible TACH, horizon 5 ---
+2026-09-14 01:44:07,546 [INFO] --- Cible FBCF, horizon 1 ---
+2026-09-14 01:44:10,359 [INFO] --- Cible FBCF, horizon 2 ---
+2026-09-14 01:44:12,841 [INFO] --- Cible FBCF, horizon 3 ---
+2026-09-14 01:44:15,444 [INFO] --- Cible FBCF, horizon 4 ---
+2026-09-14 01:44:17,785 [INFO] --- Cible FBCF, horizon 5 ---
+2026-09-14 01:44:20,568 [INFO] Resume partie 2 : {'n_lignes_previsions': 3210, 'n_evaluations': 210, 'n_specifications_gelees': 35}
+2026-09-14 01:44:43,939 [INFO] Base source chargee : C:\Users\MR KITOHOU\Desktop\Work_DAVID_DG_Mohamed\Data_collection\data\base_B_revised_wide.csv (shape=(405, 32), sha256=083587b9b54e0b92)
+2026-09-14 01:44:43,941 [INFO] Jeu de travail etendu construit : shape=(306, 32) (28 indicateurs etape 1 + DETTE_PUBLIQUE + TCER)
+2026-09-14 01:44:43,945 [INFO] Fichier de travail charge : C:\Users\MR KITOHOU\Desktop\Work_DAVID_DG_Mohamed\Data_collection\base_MEF_1991_2024_9pays_28indicateurs.csv (shape=(306, 30), sha256=af4e19eec6159577)
+2026-09-14 01:44:43,960 [INFO] Verification jeu etendu vs fichier de travail etape 1 : OK (28 colonnes comparees)

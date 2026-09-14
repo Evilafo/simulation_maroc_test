@@ -1,0 +1,5 @@
+identite,n_observations_testees,ecart_max_absolu,exacte,implication
+SOBG = RETO - DETO,282,1.0491052471195417e-12,True,"Ne jamais utiliser RETO et DETO simultanement comme predicteurs de SOBG (identite comptable, pas relation estimee)."
+OUVERTURE_COM = EXPO + IMPO,306,7.105427357601002e-13,True,"Ne pas inclure EXPO, IMPO et OUVERTURE_COM ensemble dans un meme modele lineaire (colinearite exacte par definition)."
+EMAG + EMIN + EMSE = 100,306,8.817517939974095e-05,True,Parts d'emploi sectoriel compositionnelles : n'en retenir que 2 sur 3 comme predicteurs independants.
+"VAAG + VAIN + VASE = 100 (testee, NON verifiee exactement)",302,19.853833990473987,False,"Parts de valeur ajoutee : somme proche de 100 mais pas exacte (residuel/statistique non couvert) - pas une identite stricte, colinearite forte mais pas totale."
