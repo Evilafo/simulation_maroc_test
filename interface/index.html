@@ -3,6 +3,40 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DATALAB UC-S1 | MEF Maroc</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="maquette-home">
+  <header class="site-nav">
+    <div class="site-nav-inner">
+      <a class="site-brand" href="index.html" aria-label="Datalab UC-S1, accueil"><span class="site-mark">M</span><span>DATALAB<small>UC-S1 · MAROC</small></span></a>
+      <nav class="site-links" aria-label="Navigation principale"><a class="current" href="index.html">Accueil</a><a href="#donnees">Données</a><a href="#trajectoires">Trajectoires</a><a href="#moteurs">Modèles</a><a href="#validation">Validation</a><a href="#scenarios">Scénarios</a></nav>
+      <a class="site-cta" href="simulation.html">Ouvrir la simulation</a>
+      <a class="site-mobile-link" href="data.html">Données</a>
+    </div>
+  </header>
+
+  <main id="accueil">
+    <section class="maquette-hero"><div class="hero-lines" aria-hidden="true"><span></span><span></span><span></span></div><div class="content-wrap hero-content"><p class="eyebrow">DATALAB · MINISTÈRE DE L’ÉCONOMIE ET DES FINANCES</p><h1>Anticiper les trajectoires macroéconomiques du Maroc</h1><p class="hero-lede">Une plateforme intégrée combinant données, économétrie et intelligence artificielle pour la prévision, la simulation de scénarios et l’aide à la décision.</p><div class="hero-actions"><a class="maquette-button primary" href="#moteurs">Explorer les moteurs <span>→</span></a><a class="maquette-button ghost" href="data.html">Accéder aux données</a></div><div class="kpi-band"><div><strong>9</strong><span>pays du panel comparatif</span></div><div><strong>1980—2024</strong><span>profondeur historique</span></div><div><strong>4</strong><span>moteurs analytiques</span></div><div><strong>7</strong><span>variables macro cibles</span></div></div></div></section>
+
+    <section id="donnees" class="maquette-section alt"><div class="content-wrap"><div class="section-head"><p class="eyebrow">01 · FONDATION</p><h2>Données & préparation</h2><p>Une base finale harmonisée, documentée et versionnée constitue le socle commun des analyses et des simulations.</p></div><div class="flow-row"><div class="flow-node">Base finale révisée</div><div class="flow-node">Panel multi-pays</div></div><div class="flow-line"></div><div class="flow-node wide tinted">Préparation & harmonisation des données</div><div class="traj-list"><div><b>01</b><span>Périmètre : 9 pays, 1980—2024, 32 colonnes.</span></div><div><b>02</b><span>Contrôle de complétude et de qualité, indicateur par indicateur.</span></div><div><b>03</b><span>Base finale nettoyée, consultable et analysée par l’API.</span></div></div><a class="inline-link" href="data.html">Explorer la base finale →</a></div></section>
+
+    <section id="trajectoires" class="maquette-section"><div class="content-wrap two-columns"><div><div class="section-head"><p class="eyebrow">02 · POSITIONNEMENT</p><h2>Analyse des trajectoires</h2><p>Comprendre où se situe le Maroc parmi ses comparateurs avant de modéliser.</p></div><div class="traj-list"><div><b>→</b><span>Trajectoire historique sur les sept variables cibles.</span></div><div><b>→</b><span>Réduction dimensionnelle par ACP et typologie des pays.</span></div><div><b>→</b><span>Identification des pays de référence pour le benchlearning.</span></div></div></div><div class="country-panel"><p class="eyebrow">PANEL COMPARATIF</p><p>Un groupe restreint de pays permet de comparer des trajectoires de développement, sans confondre proximité statistique et pertinence institutionnelle.</p><div class="chips"><span class="focus">Maroc</span><span>Viêt Nam</span><span>Costa Rica</span><span>Danemark</span><span>Chili</span><span>Malaisie</span><span>Portugal</span><span>Turquie</span><span>Uruguay</span></div></div></div></section>
+
+    <section id="moteurs" class="maquette-section alt"><div class="content-wrap"><div class="section-head"><p class="eyebrow">03 · CŒUR ANALYTIQUE</p><h2>Quatre moteurs, quatre lectures de la conjoncture</h2><p>Les moteurs du cadrage convergent vers une validation commune. Les modules actuellement opérationnels sont signalés clairement dans chaque carte.</p></div><div class="engine-grid"><article class="engine-card active"><p class="engine-tag">OPÉRATIONNEL</p><h3>Elastic Net</h3><p>Prévision directe par horizon, sélection temporelle et caractéristiques causales construites à partir de l’historique.</p><a href="simulation.html">Lancer une projection →</a></article><article class="engine-card active"><p class="engine-tag">OPÉRATIONNEL</p><h3>Benchlearning</h3><p>Trajectoires de donneurs, poids statistiques et scénarios séparés, avec backtest international.</p><a href="#validation">Voir les résultats →</a></article><article class="engine-card"><p class="engine-tag">CADRAGE · EXTENSION</p><h3>DFM / MIDAS</h3><p>Nowcasting à haute fréquence prévu dans l’architecture cible, non activé dans cette version annuelle.</p><span>À instruire avec des données infra-annuelles</span></article><article class="engine-card"><p class="engine-tag">CADRAGE · EXTENSION</p><h3>BVAR / Boosting / MLP</h3><p>Familles multivariées et non linéaires identifiées dans le cadrage, conservées comme pistes d’extension.</p><span>Non utilisés pour la prévision centrale</span></article></div><div class="convergence"><span>↓ sorties évaluées conjointement</span><strong>Validation temporelle · combinaison · scénarios</strong><span>↓ références pour l’aide à la décision</span></div></div></section>
+
+    <section id="validation" class="maquette-section"><div class="content-wrap"><div class="section-head"><p class="eyebrow">04 · DISCIPLINE</p><h2>Validation & comparaison</h2><p>Aucun moteur n’est retenu par principe : les résultats sont confrontés à des références naïves et à un protocole hors échantillon.</p></div><div class="preview-grid"><article><p class="eyebrow">PROTOCOLE</p><ul><li>Validation strictement chronologique.</li><li>Aucune fuite d’information future.</li><li>Horizons 1—5 évalués par backtest.</li></ul></article><article><p class="eyebrow">RÉSULTAT MESURÉ</p><p>Le benchlearning bat la persistance sur la croissance du PIB et l’inflation, mais reste moins performant sur les cibles structurelles.</p></article><article><p class="eyebrow">LIMITES</p><p>Les horizons 2030—2034 sont des extrapolations non testées. Les scénarios sont des références statistiques, pas une validation institutionnelle.</p></article></div></div></section>
+
+    <section id="scenarios" class="maquette-section alt"><div class="content-wrap"><div class="section-head"><p class="eyebrow">05 · SIMULATION</p><h2>Scénarios & tests de résistance</h2><p>La tendance marocaine peut être mise en regard de trajectoires donneuses selon des pondérations configurables.</p></div><div class="preview-grid"><article><p class="eyebrow">RÉFÉRENCE NATIONALE</p><p>Prolongement de la dynamique marocaine selon le modèle Elastic Net final.</p></article><article><p class="eyebrow">BENCHMARK COMBINÉ</p><p>Moyenne convexe des trajectoires des pays donneurs, avec poids statistiques non négatifs.</p></article><article><p class="eyebrow">MONTE CARLO</p><p>10 000 tirages pour produire des bandes conditionnelles aux hypothèses retenues.</p></article></div><a class="maquette-button primary" href="simulation.html">Accéder à la simulation →</a></div></section>
+  </main>
+  <footer class="site-footer content-wrap"><span>DATALAB UC-S1 · Plateforme analytique macroéconomique</span><span>Prototype MEF Maroc · résultats statistiques indicatifs</span></footer>
+</body>
+</html>
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>MEF Maroc | Datalab UC-S1</title>
   <link rel="stylesheet" href="styles.css">
 </head>
