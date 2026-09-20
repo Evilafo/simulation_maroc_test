@@ -36,6 +36,16 @@ def resolve_path(cfg: dict[str, Any], key: str) -> Path:
     return p
 
 
+def _local_data_path(filename: str) -> Path:
+    return PROJECT_ROOT / "data" / filename
+
+
+def _read_csv(path: Path) -> pd.DataFrame:
+    df = pd.read_csv(path, encoding="utf-8-sig")
+    df.columns = [str(column).lstrip("\ufeff") for column in df.columns]
+    return df
+
+
 def sha256_of_file(path: Path) -> str:
     h = hashlib.sha256()
     with path.open("rb") as f:
@@ -94,11 +104,20 @@ def load_work_base(cfg: dict[str, Any], logger: logging.Logger | None = None) ->
     """Charge base_MEF_1991_2024_9pays_28indicateurs.csv (fichier de travail)."""
     path = resolve_path(cfg, "work_base_mef")
     if not path.exists():
-        raise FileNotFoundError(
-            f"Fichier de travail introuvable : {path}. "
-            "Verifiez configs/config.yaml -> paths.work_base_mef."
-        )
-    df = pd.read_csv(path)
+        source_path = _local_data_path("base_B_revised_wide.csv")
+        if not source_path.exists():
+            raise FileNotFoundError(
+                f"Fichier de travail introuvable : {path}. "
+                "Verifiez configs/config.yaml -> paths.work_base_mef."
+            )
+        source = _read_csv(source_path)
+        excluded = {"DETTE_PUBLIQUE", "TCER"}
+        columns = [column for column in source.columns if column not in excluded]
+        df = source[columns].copy()
+        df = df[df["year"].between(1991, 2024)].reset_index(drop=True)
+        path = source_path
+    else:
+        df = _read_csv(path)
     if logger:
         logger.info(
             "Fichier de travail charge : %s (shape=%s, sha256=%s)",
@@ -111,11 +130,13 @@ def load_source_base(cfg: dict[str, Any], logger: logging.Logger | None = None) 
     """Charge base_B_revised_wide.csv (base source, 1980-2024, 30 indicateurs)."""
     path = resolve_path(cfg, "source_base_B_revised_wide")
     if not path.exists():
-        raise FileNotFoundError(
-            f"Base source introuvable : {path}. "
-            "Verifiez configs/config.yaml -> paths.source_base_B_revised_wide."
-        )
-    df = pd.read_csv(path)
+        path = _local_data_path("base_B_revised_wide.csv")
+        if not path.exists():
+            raise FileNotFoundError(
+                f"Base source introuvable : {path}. "
+                "Verifiez configs/config.yaml -> paths.source_base_B_revised_wide."
+            )
+    df = _read_csv(path)
     if logger:
         logger.info(
             "Base source chargee : %s (shape=%s, sha256=%s)",

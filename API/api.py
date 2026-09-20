@@ -24,11 +24,99 @@ from src.etape2 import features as feat
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 CONFIG_PATH = PROJECT_ROOT / "configs" / "config_etape2.yaml"
 MODELS_DIR = PROJECT_ROOT / "outputs" / "etape2" / "models"
+DATA_DIR = PROJECT_ROOT / "data"
+
+DATASETS = {
+    "wide_gold_full": {
+        "file": "base_B_revised_wide.csv",
+        "label": "Base finale nettoyée",
+        "description": "Base large finale nettoyée et harmonisée, utilisée pour les analyses et les comparaisons.",
+    },
+    "wide_gold_train_only": {
+        "file": "donnees_wide_gold_train_only_20260906T112701Z.csv",
+        "label": "Base large entraînement",
+        "description": "Version réservée à l'entraînement, hors années de holdout.",
+    },
+    "wide_standardisees": {
+        "file": "donnees_wide_standardisees_20260906T112701Z.csv",
+        "label": "Base large standardisée",
+        "description": "Indicateurs transformés pour les analyses comparatives.",
+    },
+    "long_full": {
+        "file": "donnees_long_full_20260906T112701Z.csv",
+        "label": "Base longue complète",
+        "description": "Une ligne par pays, année et indicateur, avec les statuts de qualité.",
+    },
+    "imputations": {
+        "file": "journal_imputations_20260906T112701Z.csv",
+        "label": "Journal des imputations",
+        "description": "Traçabilité des valeurs imputées et des méthodes appliquées.",
+    },
+    "api_calls": {
+        "file": "journal_appels_api_20260906T112701Z.csv",
+        "label": "Journal des appels API",
+        "description": "Historique des appels aux sources de données externes.",
+    },
+    "traceability": {
+        "file": "derived_traceability_20260906T112701Z.csv",
+        "label": "Traçabilité dérivée",
+        "description": "Statuts et provenance des variables dérivées.",
+    },
+}
 
 
 def _load_config() -> dict[str, Any]:
     with CONFIG_PATH.open(encoding="utf-8") as config_file:
         return yaml.safe_load(config_file)
+
+
+@lru_cache(maxsize=None)
+def _load_dataset(dataset_id: str) -> pd.DataFrame:
+    dataset = DATASETS.get(dataset_id)
+    if dataset is None:
+        raise KeyError(dataset_id)
+    path = DATA_DIR / dataset["file"]
+    if not path.exists():
+        raise FileNotFoundError(path)
+    frame = pd.read_csv(path, encoding="utf-8-sig")
+    frame.columns = [str(column).lstrip("\ufeff") for column in frame.columns]
+    return frame
+
+
+ANALYSIS_INDICATORS = [
+    "CROISSANCE_PIB",
+    "INFLATION_CPI",
+    "DETTE_PUBLIQUE",
+    "SOBG",
+    "BALANCE_COURANTE",
+    "TACH",
+    "FBCF",
+]
+
+
+def _filtered_dataset(
+    dataset_id: str,
+    country: str | None = None,
+    year_start: int | None = None,
+    year_end: int | None = None,
+) -> pd.DataFrame:
+    if dataset_id not in DATASETS:
+        raise _dataset_error(dataset_id)
+    try:
+        frame = _load_dataset(dataset_id).copy()
+    except FileNotFoundError as error:
+        raise HTTPException(status_code=503, detail="Fichier de données indisponible.") from error
+    if country and "country_iso3" in frame.columns:
+        frame = frame[frame["country_iso3"].astype(str).str.upper() == country.upper()]
+    if year_start is not None and "year" in frame.columns:
+        frame = frame[pd.to_numeric(frame["year"], errors="coerce") >= year_start]
+    if year_end is not None and "year" in frame.columns:
+        frame = frame[pd.to_numeric(frame["year"], errors="coerce") <= year_end]
+    return frame
+
+
+def _dataset_error(dataset_id: str) -> HTTPException:
+    return HTTPException(status_code=404, detail=f"Jeu de données inconnu: {dataset_id}")
 
 
 CONFIG = _load_config()
@@ -126,6 +214,118 @@ def models() -> dict[str, Any]:
             if path.exists():
                 available.append({"target": target, "horizon": horizon})
     return {"count": len(available), "models": available}
+
+
+@app.get("/data/datasets")
+def data_catalog() -> dict[str, Any]:
+    datasets = []
+    for dataset_id, metadata in DATASETS.items():
+        try:
+            frame = _load_dataset(dataset_id)
+        except FileNotFoundError:
+            continue
+        datasets.append({
+            "id": dataset_id,
+            "label": metadata["label"],
+            "description": metadata["description"],
+            "rows": len(frame),
+            "columns": len(frame.columns),
+            "column_names": list(frame.columns),
+            "countries": sorted(frame["country_iso3"].dropna().astype(str).unique().tolist())
+            if "country_iso3" in frame.columns else [],
+        })
+    return {"count": len(datasets), "datasets": datasets}
+
+
+@app.get("/data/analysis")
+def data_analysis(
+    dataset_id: str = "wide_gold_full",
+    country: str | None = None,
+    year_start: int | None = None,
+    year_end: int | None = None,
+) -> dict[str, Any]:
+    """Return descriptive statistics and chart-ready aggregates for the final base."""
+    frame = _filtered_dataset(dataset_id, country, year_start, year_end)
+    numeric_columns = [column for column in frame.columns if column not in {"country_iso3", "year"}]
+    numeric = frame[numeric_columns].apply(pd.to_numeric, errors="coerce")
+    indicators = [column for column in ANALYSIS_INDICATORS if column in numeric.columns]
+
+    summary = []
+    for column in indicators:
+        values = numeric[column].dropna()
+        summary.append({
+            "indicator": column,
+            "observations": int(values.size),
+            "missing": int(numeric[column].isna().sum()),
+            "mean": float(values.mean()) if not values.empty else None,
+            "median": float(values.median()) if not values.empty else None,
+            "std": float(values.std()) if len(values) > 1 else None,
+            "min": float(values.min()) if not values.empty else None,
+            "max": float(values.max()) if not values.empty else None,
+        })
+
+    missingness = [
+        {"indicator": column, "missing": int(numeric[column].isna().sum()), "completeness": round(float(numeric[column].notna().mean() * 100), 2)}
+        for column in numeric_columns
+    ]
+    trend_frame = frame.copy()
+    trend_frame["year"] = pd.to_numeric(trend_frame["year"], errors="coerce")
+    trends = []
+    for year, group in trend_frame.groupby("year", dropna=True):
+        point = {"year": int(year)}
+        for column in indicators:
+            values = pd.to_numeric(group[column], errors="coerce").dropna()
+            point[column] = float(values.mean()) if not values.empty else None
+        trends.append(point)
+
+    latest_year = int(trend_frame["year"].max()) if not trend_frame.empty else None
+    latest = []
+    if latest_year is not None:
+        latest_frame = trend_frame[trend_frame["year"] == latest_year]
+        for country_code, group in latest_frame.groupby("country_iso3", dropna=True):
+            values = {column: (float(pd.to_numeric(group[column], errors="coerce").iloc[0]) if pd.notna(group[column].iloc[0]) else None) for column in indicators}
+            latest.append({"country": str(country_code), "values": values})
+
+    return {
+        "dataset": dataset_id,
+        "filters": {"country": country, "year_start": year_start, "year_end": year_end},
+        "scope": {"rows": int(len(frame)), "countries": int(frame["country_iso3"].nunique()) if "country_iso3" in frame else 0, "year_min": int(trend_frame["year"].min()) if not trend_frame.empty else None, "year_max": latest_year, "columns": len(frame.columns)},
+        "indicators": indicators,
+        "summary": summary,
+        "missingness": missingness,
+        "trends": trends,
+        "latest": latest,
+    }
+
+
+@app.get("/data/{dataset_id}")
+def data_rows(
+    dataset_id: str,
+    country: str | None = None,
+    year_start: int | None = None,
+    year_end: int | None = None,
+    search: str | None = None,
+    offset: int = 0,
+    limit: int = 50,
+) -> dict[str, Any]:
+    frame = _filtered_dataset(dataset_id, country, year_start, year_end)
+    if search:
+        searchable = frame.astype(str).apply(lambda column: column.str.contains(search, case=False, na=False))
+        frame = frame[searchable.any(axis=1)]
+
+    total = len(frame)
+    offset = max(offset, 0)
+    limit = min(max(limit, 1), 200)
+    page = frame.iloc[offset:offset + limit]
+    rows = __import__("json").loads(page.to_json(orient="records"))
+    return {
+        "dataset": dataset_id,
+        "total": total,
+        "offset": offset,
+        "limit": limit,
+        "columns": list(frame.columns),
+        "rows": rows,
+    }
 
 
 @app.post("/predict", response_model=PredictionResponse)

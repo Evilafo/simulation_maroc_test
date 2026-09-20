@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MEF Maroc | Données</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="data.css">
+</head>
+<body>
+  <main class="shell data-shell">
+    <header class="topbar">
+      <a class="brand-mark" href="index.html" aria-label="Accueil Datalab MEF">M</a>
+      <div><p class="eyebrow">MEF MAROC · UC-S1</p><h1>Explorateur de données</h1></div>
+      <nav class="main-nav" aria-label="Navigation principale"><a href="index.html">Accueil</a><a href="simulation.html">Simulation</a><a class="active" href="data.html">Données</a></nav>
+      <div class="api-status" id="apiStatus"><span class="status-dot"></span><span>Connexion...</span></div>
+    </header>
+
+    <section class="data-intro">
+      <p class="eyebrow">BASE DOCUMENTAIRE</p>
+      <h2>Lire la base finale avant de la modéliser.</h2>
+      <p class="lede">La base révisée rassemble les indicateurs annuels harmonisés du Maroc et de huit pays comparateurs. Les statistiques et visualisations ci-dessous sont calculées par l’API à partir de cette source.</p>
+    </section>
+
+    <section class="analysis-section" aria-labelledby="analysisTitle">
+      <div class="analysis-heading"><div><p class="eyebrow">ANALYSE EXPLORATOIRE</p><h3 id="analysisTitle">Structure, complétude et signaux macroéconomiques.</h3></div><span id="analysisScope" class="analysis-scope">Chargement...</span></div>
+      <div id="analysisError" class="analysis-error" hidden></div>
+      <div class="kpi-grid" id="analysisKpis"></div>
+      <div class="analysis-grid">
+        <section class="chart-panel"><div class="chart-heading"><div><p class="eyebrow">STATISTIQUES DESCRIPTIVES</p><h4>Indicateurs clés</h4></div><span class="chart-note">moyenne · médiane</span></div><div id="summaryChart" class="summary-chart"></div></section>
+        <section class="chart-panel"><div class="chart-heading"><div><p class="eyebrow">QUALITÉ DES DONNÉES</p><h4>Complétude par variable</h4></div><span class="chart-note">en %</span></div><div id="missingChart" class="missing-chart"></div></section>
+      </div>
+      <section class="chart-panel trend-panel"><div class="chart-heading"><div><p class="eyebrow">ÉVOLUTION TEMPORELLE</p><h4>Moyenne annuelle des indicateurs</h4></div><select id="trendIndicator" aria-label="Indicateur de tendance"></select></div><div id="trendChart" class="trend-chart"></div></section>
+    </section>
+
+    <section class="dataset-layout">
+      <aside class="dataset-sidebar">
+        <p class="eyebrow">JEUX DISPONIBLES</p>
+        <div id="datasetList" class="dataset-list"></div>
+      </aside>
+      <section class="data-viewer">
+        <div class="viewer-heading"><div><p class="eyebrow" id="datasetEyebrow">BASE LARGE COMPLÈTE</p><h3 id="datasetTitle">Chargement...</h3><p id="datasetDescription" class="field-note"></p></div><div class="row-count"><strong id="rowCount">--</strong><span>lignes filtrées</span></div></div>
+        <div class="filters">
+          <label>Recherche<input id="searchInput" type="search" placeholder="Pays, variable, valeur..."></label>
+          <label>Pays<select id="countryFilter"><option value="">Tous les pays</option></select></label>
+          <label>Année début<input id="yearStart" type="number" placeholder="1991"></label>
+          <label>Année fin<input id="yearEnd" type="number" placeholder="2024"></label>
+          <button id="resetFilters" class="secondary-button" type="button">Réinitialiser</button>
+        </div>
+        <div class="data-table-wrap"><table class="data-table"><thead id="dataHead"></thead><tbody id="dataBody"></tbody></table><div id="dataEmpty" class="data-empty" hidden>Aucune observation ne correspond aux filtres.</div></div>
+        <div class="pagination"><button id="previousPage" class="secondary-button" type="button">← Précédent</button><span id="pageInfo">Page --</span><button id="nextPage" class="secondary-button" type="button">Suivant →</button></div>
+      </section>
+    </section>
+    <footer><span>API locale · <span id="apiEndpoint">127.0.0.1:8000</span></span><span id="dataStatus">Lecture seule · données du pipeline</span></footer>
+  </main>
+  <script src="data.js"></script>
+</body>
+</html>

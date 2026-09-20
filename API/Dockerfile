@@ -14,6 +14,7 @@ COPY src/__init__.py ./src/__init__.py
 COPY src/etape2 ./src/etape2
 COPY configs/config_etape2.yaml ./configs/config_etape2.yaml
 COPY outputs/etape2/models ./outputs/etape2/models
+COPY data ./data
 
 EXPOSE 8000
 
