@@ -1,4 +1,6 @@
-const API_URL = "http://127.0.0.1:8000";
+function getApiUrl() {
+  return window.API_URL || "http://127.0.0.1:8000";
+}
 
 const targetMeta = {
   CROISSANCE_PIB: { label: "Croissance du PIB", unit: "% annuel", columns: ["CROISSANCE_PIB", "FBCF", "IDEE"] },
@@ -41,7 +43,7 @@ function setStatus(online, text) {
 
 async function loadModels() {
   try {
-    const response = await fetch(`${API_URL}/models`);
+    const response = await fetch(`${getApiUrl()}/models`);
     if (!response.ok) throw new Error();
     const data = await response.json();
     document.querySelector("#modelCount").textContent = data.count;
@@ -73,7 +75,7 @@ document.querySelector("#forecastForm").addEventListener("submit", async (event)
   error.textContent = "";
   button.disabled = true;
   try {
-    const response = await fetch(`${API_URL}/predict`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ target: target.value, horizon: selectedHorizon.value, history }) });
+    const response = await fetch(`${getApiUrl()}/predict`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ target: target.value, horizon: selectedHorizon.value, history }) });
     const data = await response.json();
     if (!response.ok) throw new Error(data.detail?.message || data.detail || "La prévision n’a pas pu être calculée.");
     document.querySelector("#resultEmpty").hidden = true;

@@ -10,7 +10,7 @@
 <body class="with-sidebar">
   <aside class="side-menu" aria-label="Menu principal"><a class="side-brand" href="index.html"><span class="site-mark">M</span><span>DATALAB<small>UC-S1 · MAROC</small></span></a><p class="side-label">PLATEFORME</p><nav><a href="index.html"><span>01</span>Accueil</a><a class="active" href="data.html"><span>02</span>Données</a><a href="simulation.html"><span>03</span>Simulation</a></nav><p class="side-label">ANALYSE</p><nav><a class="active-soft" href="#analysisTitle"><span>04</span>Exploration</a><a href="#datasetTitle"><span>05</span>Base finale</a></nav><div class="side-foot"><span class="status-dot online"></span><span>API locale</span></div></aside>
   <main class="shell data-shell">
-    <header class="site-nav"><div class="site-nav-inner"><a class="site-brand" href="index.html" aria-label="Datalab UC-S1, accueil"><span class="site-mark">M</span><span>DATALAB<small>UC-S1 · MAROC</small></span></a><nav class="site-links" aria-label="Navigation principale"><a href="index.html">Accueil</a><a class="current" href="data.html">Données</a><a href="simulation.html">Simulation</a></nav><div class="api-status" id="apiStatus"><span class="status-dot"></span><span>Connexion...</span></div></div></header>
+    <header class="site-nav"><div class="site-nav-inner"><a class="site-brand" href="index.html" aria-label="Datalab UC-S1, accueil"><span class="site-mark">M</span><span>DATALAB<small>UC-S1 · MAROC</small></span></a><nav class="site-links" aria-label="Navigation principale"><a href="index.html">Accueil</a><a class="current" href="data.html">Données</a><a href="simulation.html">Simulation</a></nav><div class="api-config"><label for="apiUrlInput">API URL</label><input id="apiUrlInput" type="text" placeholder="http://127.0.0.1:8000" value="http://127.0.0.1:8000"><button id="apiUrlButton" class="secondary-button" type="button">Appliquer</button><div class="api-status" id="apiStatus"><span class="status-dot"></span><span>Connexion...</span></div></div></div></header>
 
     <section class="data-intro">
       <p class="eyebrow">BASE DOCUMENTAIRE</p>
@@ -51,6 +51,6 @@
     </section>
     <footer><span>API locale · <span id="apiEndpoint">127.0.0.1:8000</span></span><span id="dataStatus">Lecture seule · données du pipeline</span></footer>
   </main>
-  <script src="data.js"></script><script src="sidebar.js"></script>
+  <script src="api-config.js"></script><script src="data.js"></script><script src="sidebar.js"></script>
 </body>
 </html>

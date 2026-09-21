@@ -1,6 +1,9 @@
-const API_URL = "http://127.0.0.1:8000";
 const state = { dataset: "wide_gold_full", offset: 0, limit: 25, total: 0, columns: [], datasets: [], analysis: null };
 const $ = (selector) => document.querySelector(selector);
+
+function getApiUrl() {
+  return window.API_URL || "http://127.0.0.1:8000";
+}
 
 function setStatus(online, text) {
   $("#apiStatus").innerHTML = `<span class="status-dot ${online ? "online" : ""}"></span><span>${text}</span>`;
@@ -82,7 +85,7 @@ async function loadAnalysis() {
   if ($("#yearStart").value) params.set("year_start", $("#yearStart").value);
   if ($("#yearEnd").value) params.set("year_end", $("#yearEnd").value);
   try {
-    const response = await fetch(`${API_URL}/data/analysis?${params}`);
+    const response = await fetch(`${getApiUrl()}/data/analysis?${params}`);
     if (!response.ok) throw new Error("Impossible de calculer l’analyse.");
     renderAnalysis(await response.json());
     $("#analysisError").hidden = true;
@@ -120,7 +123,7 @@ async function loadRows() {
   if ($("#yearStart").value) params.set("year_start", $("#yearStart").value);
   if ($("#yearEnd").value) params.set("year_end", $("#yearEnd").value);
   try {
-    const response = await fetch(`${API_URL}/data/${state.dataset}?${params}`);
+    const response = await fetch(`${getApiUrl()}/data/${state.dataset}?${params}`);
     if (!response.ok) throw new Error("Impossible de charger cette base.");
     const data = await response.json();
     const metadata = state.datasets.find((dataset) => dataset.id === state.dataset);
@@ -144,7 +147,7 @@ async function loadRows() {
 }
 
 async function loadCatalog() {
-  const response = await fetch(`${API_URL}/data/datasets`);
+  const response = await fetch(`${getApiUrl()}/data/datasets`);
   const data = await response.json();
   state.datasets = data.datasets;
   renderDatasetList();
@@ -160,7 +163,7 @@ async function downloadDataset() {
   if ($("#yearStart").value) params.set("year_start", $("#yearStart").value);
   if ($("#yearEnd").value) params.set("year_end", $("#yearEnd").value);
   try {
-    const response = await fetch(`${API_URL}/data/${state.dataset}?${params}`);
+    const response = await fetch(`${getApiUrl()}/data/${state.dataset}?${params}`);
     if (!response.ok) throw new Error("Impossible de télécharger cette base.");
     const data = await response.json();
     const headers = data.columns.join(",");
