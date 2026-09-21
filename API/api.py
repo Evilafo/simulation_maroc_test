@@ -262,6 +262,9 @@ def data_analysis(
             "std": float(values.std()) if len(values) > 1 else None,
             "min": float(values.min()) if not values.empty else None,
             "max": float(values.max()) if not values.empty else None,
+            "q1": float(values.quantile(0.25)) if not values.empty else None,
+            "q3": float(values.quantile(0.75)) if not values.empty else None,
+            "iqr": float(values.quantile(0.75) - values.quantile(0.25)) if not values.empty else None,
         })
 
     missingness = [
@@ -286,6 +289,24 @@ def data_analysis(
             values = {column: (float(pd.to_numeric(group[column], errors="coerce").iloc[0]) if pd.notna(group[column].iloc[0]) else None) for column in indicators}
             latest.append({"country": str(country_code), "values": values})
 
+    country_summary = []
+    if "country_iso3" in frame.columns:
+        for country_code, group in frame.groupby("country_iso3", dropna=True):
+            country_values = {column: (float(pd.to_numeric(group[column], errors="coerce").mean()) if pd.to_numeric(group[column], errors="coerce").notna().any() else None) for column in indicators}
+            country_summary.append({"country": str(country_code), "observations": int(len(group)), "values": country_values})
+
+    correlation_frame = numeric[indicators].corr(method="pearson")
+    correlations = [
+        {"row": row, "values": {column: (float(correlation_frame.loc[row, column]) if pd.notna(correlation_frame.loc[row, column]) else None) for column in indicators}}
+        for row in indicators
+    ]
+
+    coverage = []
+    for year, group in trend_frame.groupby("year", dropna=True):
+        available = int(group[indicators].notna().sum().sum()) if indicators else 0
+        possible = int(len(group) * len(indicators))
+        coverage.append({"year": int(year), "rows": int(len(group)), "available": available, "possible": possible, "completeness": round(float(available / possible * 100), 2) if possible else 0})
+
     return {
         "dataset": dataset_id,
         "filters": {"country": country, "year_start": year_start, "year_end": year_end},
@@ -295,6 +316,9 @@ def data_analysis(
         "missingness": missingness,
         "trends": trends,
         "latest": latest,
+        "country_summary": country_summary,
+        "correlations": correlations,
+        "coverage": coverage,
     }
 
 

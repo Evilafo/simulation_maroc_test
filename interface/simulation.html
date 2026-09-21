@@ -6,7 +6,8 @@
   <title>MEF Maroc | Simulation</title>
   <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body class="with-sidebar">
+  <aside class="side-menu" aria-label="Menu principal"><a class="side-brand" href="index.html"><span class="site-mark">M</span><span>DATALAB<small>UC-S1 · MAROC</small></span></a><p class="side-label">PLATEFORME</p><nav><a href="index.html"><span>01</span>Accueil</a><a href="data.html"><span>02</span>Données</a><a class="active" href="simulation.html"><span>03</span>Simulation</a></nav><p class="side-label">SIMULATION</p><nav><a class="active-soft" href="#forecastForm"><span>04</span>Configuration</a><a href="#resultContent"><span>05</span>Résultat</a></nav><div class="side-foot"><span class="status-dot online"></span><span>API locale</span></div></aside>
   <main class="shell">
     <header class="site-nav"><div class="site-nav-inner"><a class="site-brand" href="index.html" aria-label="Datalab UC-S1, accueil"><span class="site-mark">M</span><span>DATALAB<small>UC-S1 · MAROC</small></span></a><nav class="site-links" aria-label="Navigation principale"><a href="index.html">Accueil</a><a href="data.html">Données</a><a class="current" href="simulation.html">Simulation</a></nav><div class="api-status" id="apiStatus"><span class="status-dot"></span><span>Connexion...</span></div></div></header>
 
@@ -23,6 +24,6 @@
     </section>
     <footer><span>API locale · <span id="apiEndpoint">127.0.0.1:8000</span></span><span>Étape 2 · Portefeuille prédictif</span></footer>
   </main>
-  <script src="app.js"></script>
+  <script src="app.js"></script><script src="sidebar.js"></script>
 </body>
 </html>

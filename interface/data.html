@@ -7,7 +7,8 @@
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="data.css">
 </head>
-<body>
+<body class="with-sidebar">
+  <aside class="side-menu" aria-label="Menu principal"><a class="side-brand" href="index.html"><span class="site-mark">M</span><span>DATALAB<small>UC-S1 · MAROC</small></span></a><p class="side-label">PLATEFORME</p><nav><a href="index.html"><span>01</span>Accueil</a><a class="active" href="data.html"><span>02</span>Données</a><a href="simulation.html"><span>03</span>Simulation</a></nav><p class="side-label">ANALYSE</p><nav><a class="active-soft" href="#analysisTitle"><span>04</span>Exploration</a><a href="#datasetTitle"><span>05</span>Base finale</a></nav><div class="side-foot"><span class="status-dot online"></span><span>API locale</span></div></aside>
   <main class="shell data-shell">
     <header class="site-nav"><div class="site-nav-inner"><a class="site-brand" href="index.html" aria-label="Datalab UC-S1, accueil"><span class="site-mark">M</span><span>DATALAB<small>UC-S1 · MAROC</small></span></a><nav class="site-links" aria-label="Navigation principale"><a href="index.html">Accueil</a><a class="current" href="data.html">Données</a><a href="simulation.html">Simulation</a></nav><div class="api-status" id="apiStatus"><span class="status-dot"></span><span>Connexion...</span></div></div></header>
 
@@ -26,6 +27,8 @@
         <section class="chart-panel"><div class="chart-heading"><div><p class="eyebrow">QUALITÉ DES DONNÉES</p><h4>Complétude par variable</h4></div><span class="chart-note">en %</span></div><div id="missingChart" class="missing-chart"></div></section>
       </div>
       <section class="chart-panel trend-panel"><div class="chart-heading"><div><p class="eyebrow">ÉVOLUTION TEMPORELLE</p><h4>Moyenne annuelle des indicateurs</h4></div><select id="trendIndicator" aria-label="Indicateur de tendance"></select></div><div id="trendChart" class="trend-chart"></div></section>
+      <div class="analysis-grid additional-analysis"><section class="chart-panel"><div class="chart-heading"><div><p class="eyebrow">COMPARAISON INTERNATIONALE</p><h4>Moyenne par pays</h4></div><select id="countryIndicator" aria-label="Indicateur par pays"></select></div><div id="countryChart" class="country-chart"></div></section><section class="chart-panel"><div class="chart-heading"><div><p class="eyebrow">COUVERTURE</p><h4>Observations disponibles par année</h4></div><span class="chart-note">en %</span></div><div id="coverageChart" class="coverage-chart"></div></section></div>
+      <section class="chart-panel correlation-panel"><div class="chart-heading"><div><p class="eyebrow">RELATIONS ENTRE CIBLES</p><h4>Matrice de corrélation de Pearson</h4></div><span class="chart-note">valeurs entre −1 et +1</span></div><div id="correlationChart" class="correlation-chart"></div></section>
     </section>
 
     <section class="dataset-layout">
@@ -34,7 +37,7 @@
         <div id="datasetList" class="dataset-list"></div>
       </aside>
       <section class="data-viewer">
-        <div class="viewer-heading"><div><p class="eyebrow" id="datasetEyebrow">BASE LARGE COMPLÈTE</p><h3 id="datasetTitle">Chargement...</h3><p id="datasetDescription" class="field-note"></p></div><div class="row-count"><strong id="rowCount">--</strong><span>lignes filtrées</span></div></div>
+        <div class="viewer-heading"><div><p class="eyebrow" id="datasetEyebrow">BASE LARGE COMPLÈTE</p><h3 id="datasetTitle">Chargement...</h3><p id="datasetDescription" class="field-note"></p></div><div class="viewer-actions"><div class="row-count"><strong id="rowCount">--</strong><span>lignes filtrées</span></div><button id="downloadButton" class="primary-button" type="button">Télécharger CSV</button></div></div>
         <div class="filters">
           <label>Recherche<input id="searchInput" type="search" placeholder="Pays, variable, valeur..."></label>
           <label>Pays<select id="countryFilter"><option value="">Tous les pays</option></select></label>
@@ -48,6 +51,6 @@
     </section>
     <footer><span>API locale · <span id="apiEndpoint">127.0.0.1:8000</span></span><span id="dataStatus">Lecture seule · données du pipeline</span></footer>
   </main>
-  <script src="data.js"></script>
+  <script src="data.js"></script><script src="sidebar.js"></script>
 </body>
 </html>

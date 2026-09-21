@@ -27,3 +27,14 @@ def test_data_rows_support_filters_and_pagination() -> None:
 
 def test_data_unknown_dataset_returns_not_found() -> None:
     assert client.get("/data/not_a_dataset").status_code == 404
+
+
+def test_data_analysis_returns_exploratory_aggregates() -> None:
+    response = client.get("/data/analysis?country=MAR&year_start=2020&year_end=2024")
+    assert response.status_code == 200
+    body = response.json()
+    assert body["scope"]["rows"] == 5
+    assert len(body["summary"]) == 7
+    assert len(body["country_summary"]) == 1
+    assert len(body["correlations"]) == 7
+    assert len(body["coverage"]) == 5
